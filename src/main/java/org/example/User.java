@@ -12,6 +12,7 @@ public class User {
     public User() {
         this.uuid = UUID.randomUUID();
         this.links = new ArrayList<>();
+        this.notifications = new ArrayList<>();
     }
 
     public UUID getUUID() {
@@ -27,18 +28,19 @@ public class User {
     }
 
     public String createLink(String fullLink) {
-        Link link = new Link(fullLink, 1, 10);
+        Link link = new Link(fullLink, 1, 1);
         this.links.add(link);
         return link.getSHORT_LINK();
     }
 
-    public boolean linkTransition(Link link) {
-        if (link.isLinkValid()) {
+    public void linkTransition(Link link) {
+        if (!link.isLinkValid()) {
             removeLink(link);
-            return link.linkTransition();
+            System.out.println("Invalid link");
+            return;
         }
-        System.out.println("Invalid link");
-        return false;
+        link.linkTransition();
+        notifications.add("clicks left to link: " + link.getSHORT_LINK() + " : " + link.getClicksLeft());
     }
 
     public boolean removeLink(Link link) {
@@ -51,6 +53,13 @@ public class User {
             }
         }
         return false;
+    }
+
+    public void clearInvalidLinks() {
+        for (Link link : getLinks()) {
+            if (!link.isLinkValid())
+                removeLink(link);
+        }
     }
 
 
