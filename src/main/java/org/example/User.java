@@ -1,5 +1,6 @@
 package org.example;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -33,26 +34,27 @@ public class User {
         return link.getSHORT_LINK();
     }
 
-    public void linkTransition(Link link) {
+    public String linkTransition(Link link) {
         if (!link.isLinkValid()) {
             removeLink(link);
-            System.out.println("Invalid link");
-            return;
+            return "Invalid link";
+        } else {
+            link.linkTransition();
+            notifications.add("clicks left to link: " + link.getSHORT_LINK() + " : " + link.getClicksLeft() + "\n");
+            if (!link.isLinkValid()) removeLink(link);
+            return "followed";
         }
-        link.linkTransition();
-        notifications.add("clicks left to link: " + link.getSHORT_LINK() + " : " + link.getClicksLeft());
     }
 
-    public boolean removeLink(Link link) {
+    public void removeLink(Link link) {
         for (Link elem : links) {
             if (link.equals(elem)) {
                 links.remove(elem);
                 notifications.add("The link " + elem.getSHORT_LINK() +
                         " to " + elem.getFULL_LINK() + " was removed.");
-                return true;
+                break;
             }
         }
-        return false;
     }
 
     public void clearInvalidLinks() {
@@ -62,5 +64,27 @@ public class User {
         }
     }
 
+    public void changeKillDate(Link link, int days) {
+        for (Link elem : links) {
+            if (link.equals(elem)) {
+                elem.changeLiveDays(days);
+                notifications.add("The link " + elem.getSHORT_LINK() +
+                        " will be removed in " +
+                        elem.getKILL_DATE().format(DateTimeFormatter.ofPattern("dd-MM+yyyy HH:mm")));
+                break;
+            }
+        }
+    }
+
+    public void changeClicksCount(Link link, int count) {
+        for (Link elem : links) {
+            if (link.equals(elem)) {
+                elem.changeClicksCount(count);
+                notifications.add("for link " + elem.getSHORT_LINK() + " " + elem.getClicksLeft() +
+                        " clicks left");
+                break;
+            }
+        }
+    }
 
 }

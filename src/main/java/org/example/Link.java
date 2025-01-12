@@ -9,9 +9,9 @@ import java.util.Random;
 
 
 public class Link {
-    public final String FULL_LINK;
+    private final String FULL_LINK;
     private final String SHORT_LINK;
-    private final LocalDateTime KILL_DATE;
+    private LocalDateTime KILL_DATE;
     private int clicksLeft;
 
     public Link(String fullLink, int liveDays, int maxClicks) {
@@ -33,6 +33,18 @@ public class Link {
 
     public String getSHORT_LINK() {
         return SHORT_LINK;
+    }
+
+    public void changeLiveDays(int days) {
+        this.KILL_DATE = LocalDateTime.now().plusDays(days);
+    }
+
+    public void changeClicksCount(int clicks) {
+        this.clicksLeft = clicks;
+    }
+
+    public LocalDateTime getKILL_DATE() {
+        return KILL_DATE;
     }
 
     public int getClicksLeft() {
@@ -58,7 +70,7 @@ public class Link {
     }
 
     public boolean isLinkValid() {
-        return (KILL_DATE.isAfter(LocalDateTime.now()) || clicksLeft > 0);
+        return (KILL_DATE.isAfter(LocalDateTime.now()) && clicksLeft > 0);
     }
 
     public boolean equals(Link link) {

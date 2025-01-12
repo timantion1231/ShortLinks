@@ -7,19 +7,19 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) {
         int key = 0;
-        String menu = "register: 1\nlog in: 2\nlog out: 3\ncreate short link: 4\n" +
-                "follow to short link: 5\nshow all links: 6";
+        String mainMenu = "register: 1\nlog in: 2\nlog out: 3\ncreate short link: 4\n" +
+                "follow to short link: 5\nshow all links: 6\nedit your links: 7\nexit: -1";
+        String editMenu = "remove: 1\nchange count of clicks: 2\nchange live days: 3\nback: 0";
         LinkShorter ls = new LinkShorter();
         Scanner in = new Scanner(System.in);
         ls.clearInvalidLinks();
 
         while (key != -1) {
             System.out.println("choose an option:");
-            System.out.println(menu);
+            System.out.println(mainMenu);
             try {
                 key = in.nextInt();
-            }
-            catch (Exception ex){
+            } catch (Exception ex) {
                 key = 0;
             }
             in.nextLine();
@@ -53,8 +53,36 @@ public class Main {
                     System.out.println(ls.linkTransition(shortUrl));
                     System.out.println(ls.showNotifications());
                 }
-                case 6 ->{
+                case 6 -> {
                     System.out.println(ls.getAllLinks());
+                }
+                case 7 -> {
+                    int editkey = 0;
+                    System.out.println(ls.getAllLinks());
+                    System.out.println("choose an option:\n" + editMenu);
+                    editkey = in.nextInt();
+                    in.nextLine();
+                    switch (editkey) {
+                        case 1 -> {
+                            System.out.println("paste your link to remove");
+                            String shortUrl = in.nextLine();
+                            System.out.println(ls.removeLink(shortUrl));
+                        }
+                        case 3 -> {
+                            System.out.println("paste your link to change live days");
+                            String shortUrl = in.nextLine();
+                            System.out.println("enter new live days");
+                            int days = in.nextInt();
+                            System.out.println(ls.changeLiveDays(shortUrl, days));
+                        }
+                        case 2 -> {
+                            System.out.println("paste your link to change clicks count");
+                            String shortUrl = in.nextLine();
+                            System.out.println("enter new click count");
+                            int clicks = in.nextInt();
+                            System.out.println(ls.changeClicksCount(shortUrl, clicks));
+                        }
+                    }
                 }
                 default -> {
                     if (key != -1) {
@@ -69,7 +97,5 @@ public class Main {
 }
 /*
 TODO:
- исправить удаление неактивных коротких ссылок
- исправить уведомления (при каждом уведомлении пишет your notifications, исправить добавление удаленных ссылок)
- можно добавить при переходе в пользователе в конце еще один иф чтобы удалить ссылку если она более не активна
-*/
+
+ */

@@ -56,6 +56,7 @@ public class LinkShorter {
         return "Failed to follow the link";
     }
 
+
     public String createShortLink(String fullLink) {
         if (userLogged) {
             return "your short link: " + currUser.createLink(fullLink);
@@ -91,9 +92,39 @@ public class LinkShorter {
         return "log in for see all links";
     }
 
-    public void clearInvalidLinks(){
-        for(User user: users){
+    public void clearInvalidLinks() {
+        for (User user : users) {
             user.clearInvalidLinks();
         }
+    }
+
+    public String removeLink(String link) {
+        for (Link userLink : currUser.getLinks()) {
+            if (link.equals(userLink.getSHORT_LINK())) {
+                currUser.removeLink(userLink);
+                return "link " + userLink.getSHORT_LINK() + " was successfully removed.";
+            }
+        }
+        return "you don't have this link: " + link;
+    }
+
+    public String changeLiveDays(String link, int days) {
+        for (Link userLink : currUser.getLinks()) {
+            if (link.equals(userLink.getSHORT_LINK())) {
+                currUser.changeKillDate(userLink, days);
+                return "for link " + userLink.getSHORT_LINK() + " remove date successfully changed.";
+            }
+        }
+        return "you don't have this link: " + link;
+    }
+
+    public String changeClicksCount(String link, int count) {
+        for (Link userLink : currUser.getLinks()) {
+            if (link.equals(userLink.getSHORT_LINK())) {
+                currUser.changeClicksCount(userLink, count);
+                return "for link " + userLink.getSHORT_LINK() + " max clicks count successfully changed.";
+            }
+        }
+        return "you don't have this link: " + link;
     }
 }
